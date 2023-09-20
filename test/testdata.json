@@ -4,6 +4,18 @@
     "continue": "||"
   },
   "query": {
+    "normalized": [
+      {
+        "from": "copmuter",
+        "to": "Copmuter"
+      }
+    ],
+    "redirects": [
+      {
+        "from": "Copmuter",
+        "to": "Computer"
+      }
+    ],
     "pages": {
       "7878457": {
         "pageid": 7878457,
