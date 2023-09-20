@@ -1,0 +1,33 @@
+{
+  "continue": {
+    "rvcontinue": "20230831093947|1173109469",
+    "continue": "||"
+  },
+  "query": {
+    "pages": {
+      "7878457": {
+        "pageid": 7878457,
+        "ns": 0,
+        "title": "Computer",
+        "revisions": [
+          {
+            "user": "HeyElliott",
+            "timestamp": "2023-09-17T03:19:27Z"
+          },
+          {
+            "user": "Citation bot",
+            "timestamp": "2023-09-09T20:16:31Z"
+          },
+          {
+            "user": "Shvb2006",
+            "timestamp": "2023-08-31T13:54:49Z"
+          },
+          {
+            "user": "LeoWhirpool",
+            "timestamp": "2023-08-31T11:05:37Z"
+          }
+        ]
+      }
+    }
+  }
+}
