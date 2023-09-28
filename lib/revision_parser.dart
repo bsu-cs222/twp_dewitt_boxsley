@@ -21,9 +21,7 @@ class RevisionParser {
   }
 
   bool wasRedirected(Map inputJson) {
-    print(inputJson['query'].keys.elementAt(1).toString());
-    String expectedText = inputJson['query'].keys.elementAt(1).toString();
-    if (expectedText == 'redirects') {
+    if (inputJson['query'].keys.elementAt(1).toString() == 'redirects') {
       return true;
     } else {
       return false;
