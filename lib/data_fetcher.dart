@@ -9,8 +9,6 @@ class DataFetcher {
           'Revision Reporter/0.1 (http://www.cs.bsu.edu/~pvgestwicki/courses/cs222Fa23; wesley.dewitt@bsu.edu)'
     });
 
-    //print(result);
-
     return (result.toString());
   }
 }
