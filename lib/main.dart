@@ -133,11 +133,11 @@ class _SearchRedirectNoticeWidget extends State<SearchRedirectNoticeWidget> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 64, 0, 0),
       child: Text(
-        'Your search was redirected from "$userSearchTerm" to $redirectedSearchTerm',
+        'Your search was redirected from "$userSearchTerm" to $redirectedSearchTerm.',
         //textAlign: TextAlign.center,
-        style: TextStyle(
-          color: Colors.grey[500],
-        ),
+        // style: TextStyle(
+        //   color: Colors.grey[500],
+        // ),
       ),
     );
   }
@@ -186,16 +186,16 @@ class _ListItem extends State<ListItem> {
       child: Row(
         children: [
           Text(
-            'ThisIsAUsername at ',
+            '- ThisIsAUsername at ',
             style: TextStyle(
                 //fontWeight: FontWeight.bold,
                 ),
           ),
           Text(
             'This is a timestamp',
-            style: TextStyle(
-              color: Colors.grey[500],
-            ),
+            // style: TextStyle(
+            //   color: Colors.grey[500],
+            // ),
           ),
         ],
       ),
