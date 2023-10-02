@@ -186,13 +186,13 @@ class _ListItem extends State<ListItem> {
       child: Row(
         children: [
           Text(
-            '- ThisIsAUsername at ',
+            'ThisIsAUsername',
             style: TextStyle(
-                //fontWeight: FontWeight.bold,
-                ),
+              fontWeight: FontWeight.bold,
+            ),
           ),
           Text(
-            'This is a timestamp',
+            ' at 10:00 AM, 9 January 2023',
             // style: TextStyle(
             //   color: Colors.grey[500],
             // ),

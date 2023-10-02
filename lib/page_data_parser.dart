@@ -14,11 +14,12 @@ class PageDataParser {
     final pageName = decodedJson['query']['pages'][pageId]['title'];
     final editor = decodedJson['query']['pages'][pageId]['revisions'][index]['user'];
     final timestampString = decodedJson['query']['pages'][pageId]['revisions'][index]['timestamp'];
+    final timestamp = DateTime.parse(timestampString);
 
     return Revision(
       page: pageName,
       username: editor,
-      timestamp: timestampString,
+      timestamp: timestamp,
     );
   }
 
