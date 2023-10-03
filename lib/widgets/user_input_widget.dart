@@ -28,107 +28,12 @@ class UserInputWidget extends StatefulWidget {
 class _UserInputWidgetState extends State<UserInputWidget> {
   List<ListItem> revisionsList = <ListItem>[];
 
-  final pageNameController = TextEditingController();
-  final numberOfRevisionsController = TextEditingController();
-
   bool isLoading = false;
 
   setIsLoading(bool state) => setState(() => isLoading = state);
 
-  handleSearchButtonPress() async {
-    revisionsList = [];
-    String jsonData = '';
-
-    final userSearchTerm = pageNameController.text;
-    final numberOfRevisions = int.parse(numberOfRevisionsController.text);
-
-    UrlBuilder urlBuilder = UrlBuilder();
-    final String url = urlBuilder.buildUrl(userSearchTerm, numberOfRevisions);
-
-    DataFetcher dataFetcher = DataFetcher();
-    try {
-      setIsLoading(true);
-      jsonData = await dataFetcher.fetchData(url);
-    } catch (e) {
-      if (mounted) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) => AlertDialog(
-            title: const Text('Network Error'),
-            content: const Text('Check your network connection and try again.'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () => Navigator.pop(context, 'OK'),
-                child: const Text('OK'),
-              ),
-            ],
-          ),
-        );
-        return;
-      }
-    } finally {
-      setIsLoading(false);
-    }
-
-    DataParser dataParser = DataParser(jsonData);
-    final pageExists = dataParser.pageExists();
-    final wasRedirected = dataParser.wasRedirected();
-    final pageName = dataParser.getPageName();
-
-    if (numberOfRevisions > 500) {
-      if (mounted) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) => AlertDialog(
-            title: const Text('Exceeded maximum revisions'),
-            content: const Text('The maximum number of revisions to show is 500.'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () => Navigator.pop(context, 'OK'),
-                child: const Text('OK'),
-              ),
-            ],
-          ),
-        );
-      }
-    } else if (pageExists) {
-      widget.searchRedirectNoticeWidgetCallback(SearchRedirectNoticeWidget(
-        wasRedirected: wasRedirected,
-        userSearchTerm: userSearchTerm,
-        redirectedSearchTerm: pageName,
-      ));
-
-      for (int i = 0; i < numberOfRevisions; i++) {
-        Revision revision = dataParser.getRevision(i);
-        revisionsList.add(ListItem(
-          userName: revision.username,
-          timestamp: revision.timestamp,
-        ));
-      }
-
-      widget.resultsListWidgetCallback(ResultsListWidget(
-        pageName: pageName,
-        resultsList: revisionsList,
-      ));
-    } else {
-      if (mounted) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) => AlertDialog(
-            title: const Text('No such page'),
-            content:
-                Text('The Wikipedia page for "$userSearchTerm" cannot be found. Try checking your spelling or entering a different search term.'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () => Navigator.pop(context, 'OK'),
-                child: const Text('OK'),
-              ),
-            ],
-          ),
-        );
-      }
-    }
-  }
+  final pageNameController = TextEditingController();
+  final numberOfRevisionsController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -180,5 +85,135 @@ class _UserInputWidgetState extends State<UserInputWidget> {
         ),
       ],
     );
+  }
+
+  void handleSearchButtonPress() async {
+    revisionsList = [];
+
+    final userSearchTerm = pageNameController.text;
+    int userRequestedNumberOfRevisions;
+
+    try {
+      userRequestedNumberOfRevisions = int.parse(numberOfRevisionsController.text);
+    } catch (e) {
+      invalidNumberOfRevisionsDialog();
+      return;
+    }
+
+    if (userRequestedNumberOfRevisions > 500 || userRequestedNumberOfRevisions < 1) {
+      invalidNumberOfRevisionsDialog();
+      return;
+    }
+
+    final String url = buildUrl(userSearchTerm, userRequestedNumberOfRevisions);
+    final String jsonData = await fetchData(url);
+
+    DataParser pageData = DataParser(jsonData);
+    final pageExists = pageData.pageExists();
+    final wasRedirected = pageData.wasRedirected();
+    final pageName = pageData.getPageName();
+
+    if (pageExists) {
+      buildRevisionsList(pageData);
+
+      widget.searchRedirectNoticeWidgetCallback(SearchRedirectNoticeWidget(
+        wasRedirected: wasRedirected,
+        userSearchTerm: userSearchTerm,
+        redirectedSearchTerm: pageName,
+      ));
+
+      widget.resultsListWidgetCallback(ResultsListWidget(
+        pageName: pageName,
+        resultsList: revisionsList,
+      ));
+    } else {
+      pageCannotBeFoundDialog(userSearchTerm);
+    }
+  }
+
+  String buildUrl(String userSearchTerm, int numberOfRevisions) {
+    UrlBuilder urlBuilder = UrlBuilder();
+    return urlBuilder.buildUrl(userSearchTerm, numberOfRevisions);
+  }
+
+  Future<String> fetchData(url) async {
+    DataFetcher dataFetcher = DataFetcher();
+    String jsonData = '';
+
+    try {
+      setIsLoading(true);
+      jsonData = await dataFetcher.fetchData(url);
+    } catch (e) {
+      networkErrorDialog();
+    } finally {
+      setIsLoading(false);
+    }
+
+    return jsonData;
+  }
+
+  buildRevisionsList(DataParser pageData) {
+    final int availableRevisions = pageData.getNumberOfRevisions();
+    for (int i = 0; i < availableRevisions; i++) {
+      Revision revision = pageData.getRevision(i);
+      revisionsList.add(ListItem(
+        userName: revision.userName,
+        timestamp: revision.timestamp,
+      ));
+    }
+  }
+
+  networkErrorDialog() {
+    if (mounted) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: const Text('Network Error'),
+          content: const Text('Check your network connection and try again.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.pop(context, 'OK'),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  invalidNumberOfRevisionsDialog() {
+    if (mounted) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: const Text('Invalid number of revisions'),
+          content: const Text('Please enter a whole number in the range of 1 to 500.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.pop(context, 'OK'),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
+  pageCannotBeFoundDialog(String userSearchTerm) {
+    if (mounted) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: const Text('No such page'),
+          content: Text('The Wikipedia page for "$userSearchTerm" cannot be found. Try checking your spelling or entering a different search term.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.pop(context, 'OK'),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
   }
 }

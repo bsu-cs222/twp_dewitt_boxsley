@@ -9,16 +9,21 @@ class DataParser {
     decodedJson = jsonDecode(inputJson);
   }
 
+  int getNumberOfRevisions() {
+    final pageId = decodedJson['query']['pages'].keys.first;
+    return decodedJson['query']['pages'][pageId]['revisions'].length;
+  }
+
   Revision getRevision(int index) {
     final pageId = decodedJson['query']['pages'].keys.first;
     final pageName = decodedJson['query']['pages'][pageId]['title'];
     final editor = decodedJson['query']['pages'][pageId]['revisions'][index]['user'];
     final timestampString = decodedJson['query']['pages'][pageId]['revisions'][index]['timestamp'];
-    final timestamp = DateTime.parse(timestampString).toString();
+    final timestamp = DateTime.parse(timestampString);
 
     return Revision(
       page: pageName,
-      username: editor,
+      userName: editor,
       timestamp: timestamp,
     );
   }

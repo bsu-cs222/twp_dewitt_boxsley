@@ -1,15 +1,11 @@
 class Revision {
   String page = '';
-  String username = '';
-  String timestamp = DateTime.utc(0).toString();
+  String userName = '';
+  DateTime timestamp = DateTime.utc(0);
 
   Revision({
-    required String page,
-    required String username,
-    required String timestamp,
-  }) {
-    this.page = page;
-    this.username = username;
-    this.timestamp = timestamp;
-  }
+    required this.page,
+    required this.userName,
+    required this.timestamp,
+  });
 }

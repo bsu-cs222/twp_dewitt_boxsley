@@ -9,22 +9,23 @@ void main() async {
     final File file = File('test/test_data.json');
     final String string = file.readAsStringSync();
 
-    const pageName = 'Computer';
-    const mostRecentEditor = 'HeyElliott';
-    final timestamp = DateTime.parse('2023-09-17T03:19:27Z').toString();
+    const String pageName = 'Computer';
+    const String mostRecentEditor = 'HeyElliott';
+    final DateTime timestamp = DateTime.parse('2023-09-17T03:19:27Z');
 
     final expectedRevision = Revision(
       page: pageName,
-      username: mostRecentEditor,
+      userName: mostRecentEditor,
       timestamp: timestamp,
     );
 
     final parser = DataParser(string);
     final wasRedirected = parser.wasRedirected();
     final Revision resultRevision = parser.getRevision(0);
+    print(parser.getNumberOfRevisions());
 
     expect(resultRevision.page, expectedRevision.page);
-    expect(resultRevision.username, expectedRevision.username);
+    expect(resultRevision.userName, expectedRevision.userName);
     expect(resultRevision.timestamp, expectedRevision.timestamp);
     expect(wasRedirected, true);
   });

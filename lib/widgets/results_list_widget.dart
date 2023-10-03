@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-import '../main.dart';
+import '../screens/home_screen.dart';
 import 'list_item_widget.dart';
 
 class ResultsListWidget extends StatefulWidget {
