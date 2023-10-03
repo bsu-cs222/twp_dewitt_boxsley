@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'revision.dart';
 
-class PageDataParser {
+class DataParser {
   Map decodedJson = {};
 
-  PageDataParser(String inputJson) {
+  DataParser(String inputJson) {
     this.decodedJson = jsonDecode(inputJson);
   }
 
@@ -14,7 +14,7 @@ class PageDataParser {
     final pageName = decodedJson['query']['pages'][pageId]['title'];
     final editor = decodedJson['query']['pages'][pageId]['revisions'][index]['user'];
     final timestampString = decodedJson['query']['pages'][pageId]['revisions'][index]['timestamp'];
-    final timestamp = DateTime.parse(timestampString);
+    final timestamp = DateTime.parse(timestampString).toString();
 
     return Revision(
       page: pageName,
@@ -23,8 +23,13 @@ class PageDataParser {
     );
   }
 
+  String getPageName() {
+    final pageId = decodedJson['query']['pages'].keys.first;
+    return decodedJson['query']['pages'][pageId]['title'];
+  }
+
   bool wasRedirected() {
-    if (decodedJson['query'].keys.elementAt(1) == 'redirects') {
+    if (decodedJson['query'].containsKey('redirects')) {
       return true;
     } else {
       return false;
