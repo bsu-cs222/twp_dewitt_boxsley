@@ -6,7 +6,7 @@ class DataParser {
   Map decodedJson = {};
 
   DataParser(String inputJson) {
-    this.decodedJson = jsonDecode(inputJson);
+    decodedJson = jsonDecode(inputJson);
   }
 
   Revision getRevision(int index) {
@@ -26,6 +26,14 @@ class DataParser {
   String getPageName() {
     final pageId = decodedJson['query']['pages'].keys.first;
     return decodedJson['query']['pages'][pageId]['title'];
+  }
+
+  bool pageExists() {
+    if (decodedJson['query']['pages'].containsKey('-1')) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   bool wasRedirected() {

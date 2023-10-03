@@ -1,0 +1,18 @@
+{
+  "batchcomplete": "",
+  "query": {
+    "normalized": [
+      {
+        "from": "asdfsd",
+        "to": "Asdfsd"
+      }
+    ],
+    "pages": {
+      "-1": {
+        "ns": 0,
+        "title": "Asdfsd",
+        "missing": ""
+      }
+    }
+  }
+}

@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:twp_dewitt_boxsley/data_parser.dart';
-import 'package:twp_dewitt_boxsley/revision.dart';
+import 'package:twp_dewitt_boxsley/utilities/data_parser.dart';
+import 'package:twp_dewitt_boxsley/utilities/revision.dart';
 
 void main() async {
   test('', () {
@@ -27,7 +27,5 @@ void main() async {
     expect(resultRevision.username, expectedRevision.username);
     expect(resultRevision.timestamp, expectedRevision.timestamp);
     expect(wasRedirected, true);
-
-    print(resultRevision.timestamp);
   });
 }
